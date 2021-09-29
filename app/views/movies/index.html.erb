@@ -6,9 +6,13 @@
 <table class="table table-striped col-md-12" id="movies">
   <thead>
     <tr>
-      <th>Movie Title</th>
+      <th class="<%= @movie_order == 'movie_title' ? 'hilite; bg-warning' : '' %>">
+        <%= link_to "Movie Title", {controller: :movies, action: :index, sort: "movie_title"}, id: "title_header" %>
+      </th>
       <th>Rating</th>
-      <th>Release Date</th>
+      <th class="<%= @movie_order == 'release_date' ? 'hilite; bg-warning' : '' %>">
+        <%= link_to "Release Date", {controller: :movies, action: :index, sort: "release_date"}, id: "release_date_header"%>
+      </th>
       <th>More Info</th>
     </tr>
   </thead>
