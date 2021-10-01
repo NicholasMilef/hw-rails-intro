@@ -9,23 +9,28 @@ class MoviesController < ApplicationController
     def index
       @all_ratings = Movie.pluck("rating").uniq.sort
       
-      @movie_order = params[:sort]
-      
-      if not params[:ratings]
-        params[:ratings] = {}
-        @all_ratings.each do |key, value|
-          params[:ratings][key] = 1
-        end
+      params.each do |key, value|
+        session[key] = value
       end
       
-      @checked_ratings = params[:ratings]
+      @movie_order = session[:sort]
+
+      if not session[:ratings]
+        session[:ratings] = {}
+        @all_ratings.each do |key, value|
+          session[:ratings][key] = 1
+        end
+        redirect_to controller: "movies", action: "index", :ratings => session[:ratings], :sort => session[:sort]
+      end
+      
+      @checked_ratings = session[:ratings]
       
       if @movie_order == "movie_title"
-        @movies = Movie.where(rating: params[:ratings].keys).order(:title)
+        @movies = Movie.where(rating: session[:ratings].keys).order(:title)
       elsif @movie_order == "release_date"
-        @movies = Movie.order(:release_date).where(rating: params[:ratings].keys)
+        @movies = Movie.order(:release_date).where(rating: session[:ratings].keys)
       else
-        @movies = Movie.all.where(rating: params[:ratings].keys)
+        @movies = Movie.all.where(rating: session[:ratings].keys)
       end
     end
 
